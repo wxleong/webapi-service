@@ -1,13 +1,13 @@
 # WebAPI Service
 
-# Manually Build The Docker Image
+# Build Your Own Docker Image
 
 ```
 # Build the image
 $ docker build -t webapi:local -f "./Dockerfile" .
 
 # Start a container by running the image
-$ docker run -d -n webapi-service -p 8080:8080 --rm -it webapi:local
+$ docker run -d --name webapi-service -p 8080:8080 --rm -it webapi:local
 
 # Show the status of running containers
 $ docker container ls -la
@@ -20,4 +20,11 @@ $ docker container stop webapi-service
 
 # Remove stopped containers
 $ docker container prune
+```
+
+# Use the Pre-Built Image from GHCR
+
+```
+# Start a container by running the image from GHCR
+$ docker run -d --name webapi-service -p 8080:8080 --rm -it ghcr.io/wxleong/webapi-service:latest
 ```

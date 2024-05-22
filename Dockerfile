@@ -4,7 +4,8 @@
 #FROM maven:3.8.4-eclipse-temurin-11 AS build-service
 FROM maven:3.9.6-eclipse-temurin-17 AS build-service
 COPY . /webapi
-RUN mvn -f /webapi/pom.xml clean package -Dmaven.test.skip
+#RUN mvn -f /webapi/pom.xml clean package -Dmaven.test.skip
+RUN mvn -f /webapi/pom.xml clean package
 
 #
 # Run
