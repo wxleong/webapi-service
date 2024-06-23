@@ -24,10 +24,12 @@ $ docker container prune
 
 # APIs Table
 
-| API Endpoint              | Method | Description                  |
-|---------------------------|--------|------------------------------|
-| `/api/v1/ping`            | GET    | Checks the API status        |
-| `/api/v1/get/test-data`   | GET    | Retrieves test data          |
+| API Endpoint | Method | Description |
+|--------------|--------|-------------|
+| `/api-docs`               | GET    | SpringDoc OpenAPI |
+| `/swagger-ui`             | GET    | SpringDoc OpenAPI with Swagger UI |
+| `/api/v1/ping`            | GET    | Checks the API status |
+| `/api/v1/get/test-data`   | GET    | Retrieves test data |
 
 # Use the Pre-Built Image from GHCR
 
