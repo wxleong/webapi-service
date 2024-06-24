@@ -34,6 +34,11 @@ $ docker container prune
 # Use the Pre-Built Image from GHCR
 
 ```
+# If you have downloaded the image before, remove it first
+$ docker images
+$ docker rmi --force ghcr.io/wxleong/webapi-service
+
 # Start a container by running the image from GHCR
 $ docker run -d --name webapi-service -p 8080:8080 --rm -it ghcr.io/wxleong/webapi-service:latest
+$ docker container prune
 ```

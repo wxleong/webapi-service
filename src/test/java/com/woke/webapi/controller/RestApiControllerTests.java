@@ -26,12 +26,54 @@ public class RestApiControllerTests {
     private WebTestClient webTestClient;
 
     @Test
+    void cors() {
+        /* "Access-Control-Allow-Origin" is not set if "Origin" is not set */
+        String result = webTestClient
+                .get().uri("http://localhost:" + serverPort + WEBAPI_V1_PING)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType("text/plain;charset=UTF-8")
+                .expectHeader().doesNotExist("Access-Control-Allow-Origin")
+                .expectBody(String.class)
+                .returnResult()
+                .getResponseBody();
+        Assertions.assertEquals(result, "pong");
+
+        /* "Access-Control-Allow-Origin" is set if "Origin" is set */
+        result = webTestClient
+                .get().uri("http://localhost:" + serverPort + WEBAPI_V1_PING)
+                .header("Origin", "http://somewhere")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType("text/plain;charset=UTF-8")
+                .expectHeader().valueEquals("Access-Control-Allow-Origin", "*")
+                .expectBody(String.class)
+                .returnResult()
+                .getResponseBody();
+        Assertions.assertEquals(result, "pong");
+
+        /* "Access-Control-Allow-Origin" is not set if "Origin" is set to server URI */
+        result = webTestClient
+                .get().uri("http://localhost:" + serverPort + WEBAPI_V1_PING)
+                .header("Origin", "http://localhost:" + serverPort)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType("text/plain;charset=UTF-8")
+                .expectHeader().doesNotExist("Access-Control-Allow-Origin")
+                .expectBody(String.class)
+                .returnResult()
+                .getResponseBody();
+        Assertions.assertEquals(result, "pong");
+    }
+
+    @Test
     void v1Ping() {
         String result = webTestClient
                 .get().uri("http://localhost:" + serverPort + WEBAPI_V1_PING)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType("text/plain;charset=UTF-8")
+                .expectHeader().doesNotExist("Access-Control-Allow-Origin")
                 .expectBody(String.class)
                 .returnResult()
                 .getResponseBody();
