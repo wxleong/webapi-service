@@ -1,5 +1,8 @@
 package com.woke.webapi.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woke.webapi.entity.Movie;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +16,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
-import static com.woke.webapi.Constant.WEBAPI_V1_GET_TEST_DATA;
-import static com.woke.webapi.Constant.WEBAPI_V1_PING;
+import static com.woke.webapi.Constant.*;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,6 +27,11 @@ public class RestApiControllerTests {
     private int serverPort;
     @Autowired
     private WebTestClient webTestClient;
+
+    public static List<Movie> convertJsonToMovieList(String json) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(json, new TypeReference<List<Movie>>(){});
+    }
 
     @Test
     void cors() {
@@ -93,5 +101,24 @@ public class RestApiControllerTests {
                 .returnResult()
                 .getResponseBody();
         Assertions.assertEquals(expectedOutput.trim(), result.trim());
+    }
+
+    @Test
+    void v1GetTestDataSearchContain() throws IOException {
+        String searchString = "?title=L";
+        String result = webTestClient
+                .get().uri("http://localhost:" + serverPort + WEBAPI_V1_GET_TEST_DATA_SEARCH_CONTAIN + searchString)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(String.class)
+                .returnResult()
+                .getResponseBody();
+        Assertions.assertNotNull(result);
+        Assertions.assertFalse(result.isEmpty());
+        List<Movie> movieList = convertJsonToMovieList(result);
+        Assertions.assertFalse(movieList.isEmpty());
+        Assertions.assertEquals(movieList.size(), 6);
+        Assertions.assertEquals(movieList.get(0).getTitle(), "LWB The Cotton Club");
     }
 }

@@ -26,10 +26,12 @@ $ docker container prune
 
 | API Endpoint | Method | Description |
 |--------------|--------|-------------|
+| `/h2-console`             | GET    | H2 in-memory database console. Login information, `Saved Settings: Generic H2 (Embedded)`, `user: admin`, `password: wokeadmin123`, `Driver Class: org.h2.Driver`, `JDBC URL: jdbc:h2:mem:testdb` |
 | `/api-docs`               | GET    | SpringDoc OpenAPI |
 | `/swagger-ui`             | GET    | SpringDoc OpenAPI with Swagger UI |
 | `/api/v1/ping`            | GET    | Checks the API status |
 | `/api/v1/get/test-data`   | GET    | Retrieves test data |
+| `/api/v1/get/test-data/search/contain?title=xxx` | GET | Queries the test data |
 
 # Use the Pre-Built Image from GHCR
 
