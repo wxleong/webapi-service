@@ -2,7 +2,7 @@ package com.woke.webapi.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woke.webapi.entity.Movie;
+import com.woke.webapi.model.TestDataSearch;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 
 import static com.woke.webapi.Constant.*;
 
@@ -28,9 +27,9 @@ public class RestApiControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
-    public static List<Movie> convertJsonToMovieList(String json) throws IOException {
+    public static TestDataSearch convertJsonToMovieList(String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(json, new TypeReference<List<Movie>>(){});
+        return objectMapper.readValue(json, new TypeReference<TestDataSearch>(){});
     }
 
     @Test
@@ -116,9 +115,11 @@ public class RestApiControllerTests {
                 .getResponseBody();
         Assertions.assertNotNull(result);
         Assertions.assertFalse(result.isEmpty());
-        List<Movie> movieList = convertJsonToMovieList(result);
-        Assertions.assertFalse(movieList.isEmpty());
-        Assertions.assertEquals(movieList.size(), 6);
-        Assertions.assertEquals(movieList.get(0).getTitle(), "LWB The Cotton Club");
+        TestDataSearch testDataSearch = convertJsonToMovieList(result);
+        Assertions.assertFalse(testDataSearch.getMovies().isEmpty());
+        Assertions.assertFalse(testDataSearch.getGenres().isEmpty());
+        Assertions.assertEquals(testDataSearch.getMovies().size(), 6);
+        Assertions.assertEquals(testDataSearch.getGenres().size(), 21);
+        Assertions.assertEquals(testDataSearch.getMovies().get(0).getTitle(), "LWB The Cotton Club");
     }
 }

@@ -1,6 +1,5 @@
 package com.woke.webapi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,14 +14,13 @@ public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
     @Column(nullable = false)
     private String title;
 
     @Column(name = "release_year")
-    private String releaseYear;
+    private String year;
 
     private Integer runtime;
 
