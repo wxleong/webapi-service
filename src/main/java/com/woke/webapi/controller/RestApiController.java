@@ -48,7 +48,7 @@ public class RestApiController {
 
     @GetMapping(value = Constant.WEBAPI_V1_GET_TEST_DATA_SEARCH_CONTAIN, produces = "application/json")
     public TestDataSearch getTestData(@RequestParam String title) {
-        List<MovieDTO> movies = movieService.findByTitleContaining(title);
+        List<MovieDTO> movies = movieService.findByTitleCaseInsensitiveContaining(title);
         List<String> genres = genreService.findAllGenreNames();
         TestDataSearch testDataSearch = new TestDataSearch(genres, movies);
         return testDataSearch;

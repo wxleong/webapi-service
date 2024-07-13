@@ -103,8 +103,11 @@ public class RestApiControllerTests {
     }
 
     @Test
-    void v1GetTestDataSearchContain() throws IOException {
-        String searchString = "?title=L";
+    void v1GetTestDataSearchCaseInsensitiveContain() throws IOException {
+
+        /* The following test checks if the search is working correctly. */
+
+        String searchString = "?title=ing";
         String result = webTestClient
                 .get().uri("http://localhost:" + serverPort + WEBAPI_V1_GET_TEST_DATA_SEARCH_CONTAIN + searchString)
                 .exchange()
@@ -118,7 +121,38 @@ public class RestApiControllerTests {
         TestDataSearch testDataSearch = convertJsonToMovieList(result);
         Assertions.assertFalse(testDataSearch.getMovies().isEmpty());
         Assertions.assertFalse(testDataSearch.getGenres().isEmpty());
-        Assertions.assertEquals(testDataSearch.getMovies().size(), 6);
+        Assertions.assertEquals(testDataSearch.getMovies().size(), 4);
+        Assertions.assertEquals(testDataSearch.getGenres().size(), 21);
+        Assertions.assertEquals(testDataSearch.getMovies().get(0).getTitle(), "Chasing Amy");
+
+        /* The following test checks if the case-insensitive search is working correctly. */
+
+        searchString = "?title=LWB";
+        String resultUpperCase = webTestClient
+                .get().uri("http://localhost:" + serverPort + WEBAPI_V1_GET_TEST_DATA_SEARCH_CONTAIN + searchString)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(String.class)
+                .returnResult()
+                .getResponseBody();
+
+        searchString = "?title=lwb";
+        String resultLowerCase = webTestClient
+                .get().uri("http://localhost:" + serverPort + WEBAPI_V1_GET_TEST_DATA_SEARCH_CONTAIN + searchString)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(String.class)
+                .returnResult()
+                .getResponseBody();
+
+        Assertions.assertEquals(resultUpperCase, resultLowerCase);
+
+        testDataSearch = convertJsonToMovieList(resultLowerCase);
+        Assertions.assertFalse(testDataSearch.getMovies().isEmpty());
+        Assertions.assertFalse(testDataSearch.getGenres().isEmpty());
+        Assertions.assertEquals(testDataSearch.getMovies().size(), 1);
         Assertions.assertEquals(testDataSearch.getGenres().size(), 21);
         Assertions.assertEquals(testDataSearch.getMovies().get(0).getTitle(), "LWB The Cotton Club");
     }

@@ -11,7 +11,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("SELECT new com.woke.webapi.dto.MovieDTO(m.id, m.title, m.year, m.runtime, m.director, m.actors, m.plot, m.posterUrl, "
             + "CAST(GROUP_CONCAT(g.name) AS string)) "
             + "FROM Movie m JOIN m.genres g "
-            + "WHERE m.title LIKE %:title% "
+            + "WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :title, '%')) "
             + "GROUP BY m.id, m.title, m.year, m.runtime, m.director, m.actors, m.plot, m.posterUrl")
-    List<MovieDTO> findByTitleContaining(String title);
+    List<MovieDTO> findByTitleCaseInsensitiveContaining(String title);
 }

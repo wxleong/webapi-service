@@ -11,7 +11,7 @@ public class MovieService {
     @Autowired
     private MovieRepository movieRepository;
 
-    public List<MovieDTO> findByTitleContaining(String title) {
-        return movieRepository.findByTitleContaining(title);
+    public List<MovieDTO> findByTitleCaseInsensitiveContaining(String title) {
+        return movieRepository.findByTitleCaseInsensitiveContaining(title);
     }
 }
